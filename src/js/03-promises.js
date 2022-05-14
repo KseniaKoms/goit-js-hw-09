@@ -2,31 +2,39 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const formRef = document.querySelector('.form')
 formRef.addEventListener('submit', onFormSubmit);
-let position = 0;
+
 
 function onFormSubmit(e) {
   e.preventDefault();
   let delay = formRef.delay.value;
   let amount = formRef.amount.value;
   let step = formRef.step.value;
+  let position = 1;
 
-  const timerId = setTimeout(() => {
+  setTimeout(() => {
+    createPromise(position, delay)            
+      .then(({ position, delay }) => {
+         Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+          Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
 
    const intervalId =  setInterval(() => {
      position += 1;
-     if (position <= amount) {
+      if (position <= amount) {
        delay = parseInt(delay) + parseInt(step);
        createPromise(position, delay)            
-         .then(({ position, delay }) => {    
-               Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  })
-             .catch(({ position, delay }) => {
-    Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-  });     
-     } 
-     
+         .then(({ position, delay }) => {
+           Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+         })
+         .catch(({ position, delay }) => {
+           Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+         });
+      } else {
+       clearInterval(intervalId)
+      } 
    }, step)
-    
  }, delay) 
 }
 
