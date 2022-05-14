@@ -34,11 +34,15 @@ const options = {
 
 flatpickr('#datetime-picker', options);
 
+
 function onStartBtnClick() {
-  setInterval(() => {
-    const delta = timeCounter - new Date;
+setInterval(() => {
+  const delta = timeCounter - new Date;
+  if (delta > 0) {
     updateClockface(convertMs(delta))
-  }, 1000)
+  }     
+}, 1000)
+ 
 }
 
 function convertMs(ms) {
